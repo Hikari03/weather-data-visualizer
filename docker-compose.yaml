@@ -1,0 +1,24 @@
+services:
+  db:
+    image: postgres:alpine
+    container_name: weather-data-visualizer-postgres
+    volumes:
+      - ./postgresql/postgresdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: varilamysickakasicku
+      POSTGRES_DB: weather_data
+
+
+  python:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: weather-data-visualizer-streamlit
+    restart: unless-stopped
+    depends_on:
+      - db
+    volumes:
+      - ./.streamlit:/app/.streamlit
+    ports:
+      - "8502:8502"
